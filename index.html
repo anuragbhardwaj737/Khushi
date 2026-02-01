@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Kalesh Mode 😌</title>
+<title>Kalesh Forever 😌</title>
 
 <style>
 * {
@@ -14,34 +14,44 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: linear-gradient(135deg, #ffd1e8, #fce4ff);
+  background: url("memory.jpg") center/cover no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px;
-  overflow: hidden;
-}
-
-.card {
-  background: #fff;
-  width: 100%;
-  max-width: 380px;
-  padding: 32px 24px 50px;
-  border-radius: 24px;
-  text-align: center;
-  box-shadow: 0 20px 45px rgba(0,0,0,0.15);
   position: relative;
 }
 
+/* dark overlay */
+body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  z-index: 0;
+}
+
+.card {
+  background: rgba(255,255,255,0.93);
+  width: 100%;
+  max-width: 380px;
+  padding: 30px 24px 45px;
+  border-radius: 24px;
+  text-align: center;
+  box-shadow: 0 20px 45px rgba(0,0,0,0.25);
+  position: relative;
+  z-index: 1;
+}
+
 .emoji {
-  font-size: 56px;
-  margin-bottom: 16px;
+  font-size: 52px;
+  margin-bottom: 12px;
 }
 
 h1 {
   font-size: 20px;
   line-height: 1.45;
-  margin-bottom: 34px;
+  margin-bottom: 30px;
 }
 
 .buttons {
@@ -56,13 +66,12 @@ button {
   border-radius: 30px;
   cursor: pointer;
   position: absolute;
-  user-select: none;
 }
 
 #yes {
   background: #ff4d88;
   color: white;
-  left: 20%;
+  left: 18%;
   top: 50px;
 }
 
@@ -72,16 +81,27 @@ button {
   top: 50px;
 }
 
-/* Floating hearts */
+/* Screenshot button */
+#shot {
+  margin-top: 20px;
+  background: #222;
+  color: #fff;
+  padding: 10px 22px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+/* Hearts */
 .heart {
   position: fixed;
-  font-size: 20px;
+  font-size: 22px;
   animation: floatUp 3s linear forwards;
+  z-index: 5;
 }
 
 @keyframes floatUp {
   from { transform: translateY(0); opacity: 1; }
-  to { transform: translateY(-120px); opacity: 0; }
+  to { transform: translateY(-140px); opacity: 0; }
 }
 </style>
 </head>
@@ -92,65 +112,74 @@ button {
   <div class="emoji">🥹💗</div>
   <h1>Khushi, dobara se mera kalesh banogi?</h1>
 
-  <div class="buttons" id="btnArea">
+  <div class="buttons" id="area">
     <button id="yes">Aaho</button>
     <button id="no">No</button>
   </div>
+
+  <button id="shot">📸 Save Memory</button>
 </div>
 
-<!-- Sounds -->
 <audio id="noSound" src="https://assets.mixkit.co/sfx/preview/mixkit-game-click-1114.mp3"></audio>
 <audio id="yesSound" src="https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3"></audio>
 
 <script>
 const noBtn = document.getElementById("no");
 const yesBtn = document.getElementById("yes");
-const area = document.getElementById("btnArea");
+const area = document.getElementById("area");
 const card = document.getElementById("card");
 
 function bounceNo() {
   const areaRect = area.getBoundingClientRect();
   const btnRect = noBtn.getBoundingClientRect();
 
-  const maxX = areaRect.width - btnRect.width;
-  const maxY = areaRect.height - btnRect.height;
+  const x = Math.random() * (areaRect.width - btnRect.width);
+  const y = Math.random() * (areaRect.height - btnRect.height);
 
-  const x = Math.random() * maxX;
-  const y = Math.random() * maxY;
-
-  noBtn.style.left = `${x}px`;
-  noBtn.style.top = `${y}px`;
-
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
   document.getElementById("noSound").play();
 }
 
-// Desktop + Mobile
 noBtn.addEventListener("mouseenter", bounceNo);
 noBtn.addEventListener("touchstart", bounceNo);
 
-function createHeart() {
-  const heart = document.createElement("div");
-  heart.className = "heart";
-  heart.innerText = "💖";
-  heart.style.left = Math.random() * window.innerWidth + "px";
-  heart.style.bottom = "0px";
-  document.body.appendChild(heart);
-  setTimeout(() => heart.remove(), 3000);
+function heart() {
+  const h = document.createElement("div");
+  h.className = "heart";
+  h.innerText = "💖";
+  h.style.left = Math.random() * window.innerWidth + "px";
+  h.style.bottom = "0px";
+  document.body.appendChild(h);
+  setTimeout(() => h.remove(), 3000);
 }
 
 yesBtn.addEventListener("click", () => {
   document.getElementById("yesSound").play();
-
-  const heartInterval = setInterval(createHeart, 200);
-
-  setTimeout(() => clearInterval(heartInterval), 2500);
+  const loop = setInterval(heart, 200);
+  setTimeout(() => clearInterval(loop), 2500);
 
   card.innerHTML = `
     <div class="emoji">😂🎉</div>
-    <h1>Kalesh officially resume ho gaya 😌🔥</h1>
+    <h1>Officially kalesh resume ho gaya 😌🔥</h1>
+    <button id="shot">📸 Save Memory</button>
   `;
 });
+
+/* Screenshot */
+document.addEventListener("click", (e) => {
+  if (e.target.id === "shot") {
+    html2canvas(document.body).then(canvas => {
+      const link = document.createElement("a");
+      link.download = "memory.png";
+      link.href = canvas.toDataURL();
+      link.click();
+    });
+  }
+});
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 </body>
 </html>
