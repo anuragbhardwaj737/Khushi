@@ -1,135 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Kalesh Proposal 😌</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Kalesh Mode 😌</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: "Poppins", system-ui, sans-serif;
-    }
+<style>
+* {
+  box-sizing: border-box;
+  font-family: "Poppins", system-ui, sans-serif;
+}
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: linear-gradient(135deg, #ffd1e8, #fce4ff);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #ffd1e8, #fce4ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  overflow: hidden;
+}
 
-    .card {
-      background: #fff;
-      width: 100%;
-      max-width: 380px;
-      padding: 32px 24px 44px;
-      border-radius: 24px;
-      text-align: center;
-      box-shadow: 0 20px 45px rgba(0,0,0,0.15);
-      position: relative;
-      overflow: hidden;
-    }
+.card {
+  background: #fff;
+  width: 100%;
+  max-width: 380px;
+  padding: 32px 24px 50px;
+  border-radius: 24px;
+  text-align: center;
+  box-shadow: 0 20px 45px rgba(0,0,0,0.15);
+  position: relative;
+}
 
-    .emoji {
-      font-size: 56px;
-      margin-bottom: 16px;
-    }
+.emoji {
+  font-size: 56px;
+  margin-bottom: 16px;
+}
 
-    h1 {
-      font-size: 20px;
-      line-height: 1.45;
-      margin-bottom: 34px;
-    }
+h1 {
+  font-size: 20px;
+  line-height: 1.45;
+  margin-bottom: 34px;
+}
 
-    .buttons {
-      position: relative;
-      height: 120px;
-    }
+.buttons {
+  position: relative;
+  height: 140px;
+}
 
-    button {
-      border: none;
-      padding: 12px 28px;
-      font-size: 16px;
-      border-radius: 30px;
-      cursor: pointer;
-      position: absolute;
-      transition: transform 0.2s ease;
-      user-select: none;
-    }
+button {
+  border: none;
+  padding: 12px 28px;
+  font-size: 16px;
+  border-radius: 30px;
+  cursor: pointer;
+  position: absolute;
+  user-select: none;
+}
 
-    #yes {
-      background: #ff4d88;
-      color: white;
-      left: 18%;
-      top: 40px;
-    }
+#yes {
+  background: #ff4d88;
+  color: white;
+  left: 20%;
+  top: 50px;
+}
 
-    #no {
-      background: #eee;
-      right: 18%;
-      top: 40px;
-    }
+#no {
+  background: #eee;
+  left: 55%;
+  top: 50px;
+}
 
-    button:active {
-      transform: scale(0.94);
-    }
+/* Floating hearts */
+.heart {
+  position: fixed;
+  font-size: 20px;
+  animation: floatUp 3s linear forwards;
+}
 
-    .result {
-      font-size: 24px;
-      line-height: 1.4;
-    }
-  </style>
+@keyframes floatUp {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(-120px); opacity: 0; }
+}
+</style>
 </head>
 
 <body>
 
-  <div class="card" id="card">
-    <div class="emoji">🥹💗</div>
-    <h1>Khushi, dobara se mera kalesh banogi?</h1>
+<div class="card" id="card">
+  <div class="emoji">🥹💗</div>
+  <h1>Khushi, dobara se mera kalesh banogi?</h1>
 
-    <div class="buttons">
-      <button id="yes">Aaho</button>
-      <button id="no">No</button>
-    </div>
+  <div class="buttons" id="btnArea">
+    <button id="yes">Aaho</button>
+    <button id="no">No</button>
   </div>
+</div>
 
-  <script>
-    const noBtn = document.getElementById("no");
-    const card = document.getElementById("card");
+<!-- Sounds -->
+<audio id="noSound" src="https://assets.mixkit.co/sfx/preview/mixkit-game-click-1114.mp3"></audio>
+<audio id="yesSound" src="https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3"></audio>
 
-    function bounceNoButton() {
-      const cardRect = card.getBoundingClientRect();
-      const btnRect = noBtn.getBoundingClientRect();
+<script>
+const noBtn = document.getElementById("no");
+const yesBtn = document.getElementById("yes");
+const area = document.getElementById("btnArea");
+const card = document.getElementById("card");
 
-      const maxX = cardRect.width - btnRect.width - 20;
-      const maxY = cardRect.height - btnRect.height - 140;
+function bounceNo() {
+  const areaRect = area.getBoundingClientRect();
+  const btnRect = noBtn.getBoundingClientRect();
 
-      const x = Math.random() * maxX;
-      const y = Math.random() * maxY + 90;
+  const maxX = areaRect.width - btnRect.width;
+  const maxY = areaRect.height - btnRect.height;
 
-      noBtn.style.left = `${x}px`;
-      noBtn.style.top = `${y}px`;
-    }
+  const x = Math.random() * maxX;
+  const y = Math.random() * maxY;
 
-    // Desktop
-    noBtn.addEventListener("mouseenter", bounceNoButton);
+  noBtn.style.left = `${x}px`;
+  noBtn.style.top = `${y}px`;
 
-    // Mobile
-    noBtn.addEventListener("touchstart", bounceNoButton);
+  document.getElementById("noSound").play();
+}
 
-    document.getElementById("yes").addEventListener("click", () => {
-      card.innerHTML = `
-        <div class="emoji">😂💖</div>
-        <div class="result">
-          Mubarak ho!<br>
-          Kalesh officially resume ho gaya 😌🔥
-        </div>
-      `;
-    });
-  </script>
+// Desktop + Mobile
+noBtn.addEventListener("mouseenter", bounceNo);
+noBtn.addEventListener("touchstart", bounceNo);
+
+function createHeart() {
+  const heart = document.createElement("div");
+  heart.className = "heart";
+  heart.innerText = "💖";
+  heart.style.left = Math.random() * window.innerWidth + "px";
+  heart.style.bottom = "0px";
+  document.body.appendChild(heart);
+  setTimeout(() => heart.remove(), 3000);
+}
+
+yesBtn.addEventListener("click", () => {
+  document.getElementById("yesSound").play();
+
+  const heartInterval = setInterval(createHeart, 200);
+
+  setTimeout(() => clearInterval(heartInterval), 2500);
+
+  card.innerHTML = `
+    <div class="emoji">😂🎉</div>
+    <h1>Kalesh officially resume ho gaya 😌🔥</h1>
+  `;
+});
+</script>
 
 </body>
 </html>
