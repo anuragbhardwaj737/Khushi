@@ -1,111 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kalesh Forever 😌</title>
-
 <style>
-* {
-  box-sizing: border-box;
-  font-family: "Poppins", system-ui, sans-serif;
-}
-
+* { box-sizing: border-box; font-family: "Poppins", system-ui, sans-serif; margin:0; padding:0;}
 body {
-  margin: 0;
   min-height: 100vh;
-  background: url("memory.jpg") center/cover no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px;
   position: relative;
+  background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 50%, #fbc2eb 100%);
+  overflow: hidden;
 }
 
-/* dark overlay */
 body::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.35);
-  z-index: 0;
+  content:"";
+  position:absolute;
+  inset:0;
+  background: rgba(255,105,180,0.2);
+  z-index:0;
 }
 
 .card {
   background: rgba(255,255,255,0.93);
-  width: 100%;
-  max-width: 380px;
-  padding: 30px 24px 45px;
-  border-radius: 24px;
-  text-align: center;
-  box-shadow: 0 20px 45px rgba(0,0,0,0.25);
-  position: relative;
-  z-index: 1;
+  width:100%;
+  max-width:380px;
+  padding:30px 24px 45px;
+  border-radius:24px;
+  text-align:center;
+  box-shadow:0 20px 45px rgba(0,0,0,0.25);
+  position:relative;
+  z-index:1;
 }
 
-.emoji {
-  font-size: 52px;
-  margin-bottom: 12px;
-}
+.emoji { font-size:52px; margin-bottom:12px; }
+h1 { font-size:20px; line-height:1.45; margin-bottom:30px; }
 
-h1 {
-  font-size: 20px;
-  line-height: 1.45;
-  margin-bottom: 30px;
-}
-
-.buttons {
-  position: relative;
-  height: 140px;
-}
-
+.buttons { position:relative; height:140px; }
 button {
-  border: none;
-  padding: 12px 28px;
-  font-size: 16px;
-  border-radius: 30px;
-  cursor: pointer;
-  position: absolute;
+  border:none;
+  padding:12px 28px;
+  font-size:16px;
+  border-radius:30px;
+  cursor:pointer;
+  position:absolute;
 }
 
-#yes {
-  background: #ff4d88;
-  color: white;
-  left: 18%;
-  top: 50px;
-}
+#yes { background:#ff4d88; color:white; left:18%; top:50px; }
+#no { background:#eee; left:55%; top:50px; }
 
-#no {
-  background: #eee;
-  left: 55%;
-  top: 50px;
-}
-
-/* Screenshot button */
 #shot {
-  margin-top: 20px;
-  background: #222;
-  color: #fff;
-  padding: 10px 22px;
-  border-radius: 20px;
-  font-size: 14px;
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#ff4d88;
+  color:#fff;
+  padding:12px 25px;
+  border-radius:25px;
+  font-size:16px;
+  cursor:pointer;
+  z-index:10;
 }
 
-/* Hearts */
 .heart {
-  position: fixed;
-  font-size: 22px;
+  position:fixed;
+  font-size:22px;
   animation: floatUp 3s linear forwards;
-  z-index: 5;
+  z-index:5;
 }
 
 @keyframes floatUp {
-  from { transform: translateY(0); opacity: 1; }
-  to { transform: translateY(-140px); opacity: 0; }
+  from { transform:translateY(0); opacity:1;}
+  to { transform:translateY(-140px); opacity:0;}
 }
 </style>
 </head>
-
 <body>
 
 <div class="card" id="card">
@@ -116,26 +90,26 @@ button {
     <button id="yes">Aaho</button>
     <button id="no">No</button>
   </div>
-
-  <button id="shot">📸 Save Memory</button>
 </div>
+
+<button id="shot">📸 Save Memory</button>
 
 <audio id="noSound" src="https://assets.mixkit.co/sfx/preview/mixkit-game-click-1114.mp3"></audio>
 <audio id="yesSound" src="https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3"></audio>
 
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
 const noBtn = document.getElementById("no");
 const yesBtn = document.getElementById("yes");
 const area = document.getElementById("area");
 const card = document.getElementById("card");
+const shotBtn = document.getElementById("shot");
 
 function bounceNo() {
   const areaRect = area.getBoundingClientRect();
   const btnRect = noBtn.getBoundingClientRect();
-
   const x = Math.random() * (areaRect.width - btnRect.width);
   const y = Math.random() * (areaRect.height - btnRect.height);
-
   noBtn.style.left = x + "px";
   noBtn.style.top = y + "px";
   document.getElementById("noSound").play();
@@ -156,30 +130,32 @@ function heart() {
 
 yesBtn.addEventListener("click", () => {
   document.getElementById("yesSound").play();
+  
+  // send SMS placeholder
+  fetch("https://YOUR_SERVER_URL/send-sms", { method: "POST" })
+    .then(res=>res.json())
+    .then(data=>console.log("SMS sent:", data))
+    .catch(err=>console.log("SMS failed:", err));
+
   const loop = setInterval(heart, 200);
   setTimeout(() => clearInterval(loop), 2500);
 
   card.innerHTML = `
     <div class="emoji">😂🎉</div>
     <h1>Officially kalesh resume ho gaya 😌🔥</h1>
-    <button id="shot">📸 Save Memory</button>
   `;
 });
 
-/* Screenshot */
-document.addEventListener("click", (e) => {
-  if (e.target.id === "shot") {
-    html2canvas(document.body).then(canvas => {
-      const link = document.createElement("a");
-      link.download = "memory.png";
-      link.href = canvas.toDataURL();
-      link.click();
-    });
-  }
+/* Screenshot functionality */
+shotBtn.addEventListener("click", () => {
+  html2canvas(document.body).then(canvas => {
+    const link = document.createElement("a");
+    link.download = "memory.png";
+    link.href = canvas.toDataURL();
+    link.click();
+  });
 });
 </script>
-
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 </body>
 </html>
